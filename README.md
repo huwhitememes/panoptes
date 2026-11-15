@@ -37,6 +37,8 @@ Tool names map to stations like this:
 
 The events consumed are `tool.start`, `tool.complete`, `message.delta`, `message.complete`, `session.usage`, `subagent.*`, `status.update` and `todo.updated` from the Hermes gateway.
 
+A status-bar chip (bottom right) shows the running-call count and session totals while the pane is collapsed, and a totals line under the map carries call count and cumulative tokens from `session.usage`.
+
 ## Install
 
 The desktop app loads runtime plugins from a fixed directory and hot-reloads them on file change. No build step, no app rebuild.

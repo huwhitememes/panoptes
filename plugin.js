@@ -95,7 +95,9 @@ function freshBoard() {
     modelLiveAt: 0,         // last message.delta/generating ms
     answeredAt: 0,          // last message.complete ms
     nowLine: '',            // status.update text
-    todos: 0                // todo.updated count
+    todos: 0,               // todo.updated count
+    tokens: null,           // cumulative session tokens (session.usage)
+    calls: 0                // cumulative api calls (session.usage)
   }
 }
 
@@ -162,6 +164,12 @@ const fmtMs = (ms) => {
   if (ms < 1000) return Math.max(0, Math.round(ms)) + ' ms'
   if (ms < 60000) return (ms / 1000).toFixed(1) + ' s'
   return Math.floor(ms / 60000) + 'm ' + Math.round((ms % 60000) / 1000) + 's'
+}
+
+const fmtTok = (n) => {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M tok'
+  if (n >= 1e3) return Math.round(n / 1e3) + 'k tok'
+  return n + ' tok'
 }
 
 const C = {
@@ -431,10 +439,45 @@ function LotMapPane({ motionPref }) {
             children: b.nowLine
           }, 'now')
         : null,
-      b.todos > 0
-        ? jsx('div', { style: { fontSize: 10, color: TERT, padding: '2px 2px 0' }, children: 'tasks: ' + b.todos }, 'todos')
+      b.todos > 0 || b.calls > 0
+        ? jsx('div', {
+            style: { fontSize: 10, color: TERT, padding: '2px 2px 0', whiteSpace: 'nowrap' },
+            children: [
+              b.todos > 0 ? 'tasks: ' + b.todos : '',
+              b.todos > 0 && b.calls > 0 ? ' · ' : '',
+              b.calls > 0
+                ? b.tokens ? b.calls + ' calls · ' + fmtTok(b.tokens) : b.calls + ' calls'
+                : ''
+            ].filter(Boolean).join('')
+          }, 'todos')
         : null,
       Feed({ b })
+    ]
+  })
+}
+
+/** Status-bar chip: live activity even when the pane is collapsed. */
+function Chip() {
+  const b = useValue(board)
+  const run = b.entries.reduce((n, e) => n + (e.status === 'run' ? 1 : 0), 0)
+  const label = run > 0
+    ? run + ' running'
+    : b.calls > 0 ? b.calls + (b.tokens ? ' · ' + fmtTok(b.tokens) : '') : 'idle'
+  return jsxs('span', {
+    style: {
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      fontSize: 11, color: run > 0 ? C.teal : TERT, padding: '0 6px', userSelect: 'none'
+    },
+    title: 'Panoptes - the all-seeing pane',
+    children: [
+      jsx('span', {
+        style: {
+          width: 6, height: 6, borderRadius: '50%', flex: 'none',
+          background: run > 0 ? C.teal : TERT,
+          opacity: run > 0 ? 1 : 0.4
+        }
+      }, 'd'),
+      jsx('span', { style: { whiteSpace: 'nowrap' }, children: label }, 't')
     ]
   })
 }
@@ -476,7 +519,15 @@ export default {
     ctx.onEvent('session.usage', (ev) => {
       const p = ev && ev.payload
       if (!p || !p.context_length) return
-      touch((b) => ({ ...b, ctxPct: Math.max(0, Math.min(1, (p.context_tokens || 0) / p.context_length)) }))
+      const u = p.usage || {}
+      const tok = u.total != null ? u.total
+        : (u.input || 0) + (u.output || 0) + (u.cache_read || 0) + (u.cache_write || 0)
+      touch((b) => ({
+        ...b,
+        ctxPct: Math.max(0, Math.min(1, (p.context_tokens || 0) / p.context_length)),
+        tokens: tok > 0 ? tok : b.tokens,
+        calls: p.api_calls != null ? p.api_calls : b.calls
+      }))
     })
 
     ctx.onEvent('subagent.start', (ev) => {
@@ -497,6 +548,15 @@ export default {
     ctx.onEvent('todo.updated', (ev) => {
       const p = ev && ev.payload
       if (p && Array.isArray(p.todos)) touch((b) => ({ ...b, todos: p.todos.length }))
+    })
+
+    // status-bar chip: live even when the pane is collapsed (area may not
+    // exist on older hosts; register is harmless if unsupported)
+    ctx.register({
+      id: 'chip',
+      area: 'statusBar.right',
+      order: 50,
+      render: () => jsx(Chip, {})
     })
 
     // the pane: its own tiling pane on the workspace's right edge
