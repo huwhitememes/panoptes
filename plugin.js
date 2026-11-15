@@ -149,7 +149,6 @@ const W = 320
 const CX = W / 2
 const CY = 148
 const CORE_R = 22
-const RING_R = 30
 const ORBIT = 106
 
 const POS = {}
@@ -176,10 +175,25 @@ const TERT = 'var(--ui-text-tertiary, #94a3b8)'
 const SEC = 'var(--ui-text-secondary, #cbd5e1)'
 
 function MapSvg({ b, now, motion }) {
-  const ringC = 2 * Math.PI * RING_R
+  const IRIS_R = 16
+  const ringC = 2 * Math.PI * IRIS_R
   const pct = b.ctxPct
   const ringColor = pct == null ? C.teal : pct < 0.7 ? C.teal : pct < 0.9 ? C.amber : C.red
   const modelLive = now - b.modelLiveAt < 2200
+
+  // where the eye looks: the station working now, else the last one that did
+  let focus = null
+  for (let i = b.entries.length - 1; i >= 0; i--) {
+    const e = b.entries[i]
+    if (e.status === 'run') { focus = POS[e.station]; break }
+    if (!focus) focus = POS[e.station]
+  }
+  let px = CX, py = CY
+  if (focus) {
+    const dx = focus.x - CX, dy = focus.y - CY
+    const len = Math.hypot(dx, dy) || 1
+    px = CX + (dx / len) * 7; py = CY + (dy / len) * 7
+  }
 
   const pulses = []
   const running = {}
@@ -196,13 +210,43 @@ function MapSvg({ b, now, motion }) {
     viewBox: `0 0 ${W} 296`,
     style: { width: '100%', display: 'block', flex: 'none' },
     children: [
-      // worn spokes: thicker + brighter the more a station was used
+      // the orbit the stations ride on
+      jsx('circle', {
+        cx: CX, cy: CY, r: ORBIT, fill: 'none',
+        stroke: C.spoke, strokeWidth: 1, strokeDasharray: '2 5', opacity: 0.5
+      }, 'orbit'),
+
+      // watchtower sweep: one slow line turning behind everything
+      motion
+        ? jsxs('g', {
+            opacity: 0.35,
+            children: [
+              jsxs('g', {
+                children: [
+                  jsx('line', {
+                    x1: CX, y1: CY, x2: CX + ORBIT, y2: CY,
+                    stroke: C.teal, strokeWidth: 1, opacity: 0.35
+                  }, 'sl'),
+                  jsx('animateTransform', {
+                    attributeName: 'transform', type: 'rotate',
+                    from: `0 ${CX} ${CY}`, to: `360 ${CX} ${CY}`,
+                    dur: '14s', repeatCount: 'indefinite'
+                  }, 'atr')
+                ]
+              }, 'sw')
+            ]
+          }, 'sweep')
+        : null,
+
+      // short wear ticks from the eye's edge to the orbit; thicker the more a station ran
       ...STATIONS.map((s) => {
         const p = POS[s.id]
         const n = b.counts[s.id] || 0
         const hot = (running[s.id] || 0) > 0
+        const fx = (p.x - CX) / ORBIT, fy = (p.y - CY) / ORBIT
         return jsx('line', {
-          x1: CX, y1: CY, x2: p.x, y2: p.y,
+          x1: CX + fx * (CORE_R + 8), y1: CY + fy * (CORE_R + 8),
+          x2: CX + fx * (ORBIT - 10), y2: CY + fy * (ORBIT - 10),
           stroke: hot ? C.teal : C.spoke,
           strokeWidth: 1 + Math.min(n, 14) * 0.3,
           opacity: hot ? 0.9 : 0.25 + Math.min(n, 24) / 60,
@@ -243,35 +287,45 @@ function MapSvg({ b, now, motion }) {
         }, 'g' + s.id)
       }),
 
-      // context ring around the core (session.usage)
-      pct != null
-        ? jsx('circle', {
-            cx: CX, cy: CY, r: RING_R, fill: 'none',
-            stroke: ringColor, strokeWidth: 3, strokeLinecap: 'round',
-            strokeDasharray: ringC, strokeDashoffset: ringC * (1 - Math.min(pct, 1)),
-            transform: `rotate(-90 ${CX} ${CY})`, opacity: 0.9
-          }, 'ring')
-        : null,
-
-      // the model core
-      jsx('circle', {
-        cx: CX, cy: CY, r: CORE_R, fill: 'none',
-        stroke: modelLive ? C.teal : TERT,
-        strokeWidth: modelLive ? 2.2 : 1.2,
-        className: modelLive && motion ? 'lm-breathe' : ''
-      }, 'core'),
-      jsx('text', {
-        x: CX, y: CY + 3, fontSize: 9, textAnchor: 'middle', letterSpacing: 1,
-        style: { fill: SEC },
-        children: 'HERMES'
-      }, 'corelabel'),
-      pct != null
-        ? jsx('text', {
-            x: CX, y: CY + RING_R + 12, fontSize: 8.5, textAnchor: 'middle',
-            fill: ringColor,
-            children: Math.round(pct * 100) + '%'
-          }, 'pct')
-        : null,
+      // the eye: context ring is the iris, pupil looks at the work
+      jsxs('g', {
+        className: b.answeredAt && now - b.answeredAt < 300 ? 'lm-blink' : '',
+        children: [
+          jsx('circle', {
+            cx: CX, cy: CY, r: CORE_R,
+            fill: 'var(--ui-surface-2, #0b0f16)', stroke: modelLive ? C.teal : TERT,
+            strokeWidth: modelLive ? 2 : 1, opacity: 0.95
+          }, 'ball'),
+          pct != null
+            ? jsx('circle', {
+                cx: CX, cy: CY, r: IRIS_R, fill: 'none',
+                stroke: ringColor, strokeWidth: 3.5, strokeLinecap: 'round',
+                strokeDasharray: ringC, strokeDashoffset: ringC * (1 - Math.min(pct, 1)),
+                transform: `rotate(-90 ${CX} ${CY})`, opacity: 0.9
+              }, 'ring')
+            : null,
+          jsx('circle', {
+            cx: px, cy: py, r: modelLive ? 6.5 : 5,
+            fill: modelLive ? C.teal : SEC,
+            className: modelLive && motion ? 'lm-breathe' : ''
+          }, 'pupil'),
+          jsx('circle', {
+            cx: px - 2, cy: py - 2, r: 1.4, fill: 'var(--ui-surface-2, #0b0f16)', opacity: 0.9
+          }, 'glint'),
+          jsx('text', {
+            x: CX, y: CY + CORE_R + 15, fontSize: 9, textAnchor: 'middle', letterSpacing: 1,
+            style: { fill: SEC },
+            children: 'HERMES'
+          }, 'corelabel'),
+          pct != null
+            ? jsx('text', {
+                x: CX, y: CY + CORE_R + 27, fontSize: 8.5, textAnchor: 'middle',
+                fill: ringColor,
+                children: Math.round(pct * 100) + '%'
+              }, 'pct')
+            : null
+        ]
+      }, 'eye'),
 
       // pulses: out on start, back on completion
       ...pulses.map((p) => jsx('circle', {
@@ -351,6 +405,8 @@ const CSS = `
 @keyframes lm-breathe { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
 .lm-answer { animation: lm-answer 1.4s ease-out forwards; }
 @keyframes lm-answer { from { r: 22; opacity: 0.9 } to { r: 64; opacity: 0 } }
+.lm-blink { animation: lm-blink 0.28s linear; }
+@keyframes lm-blink { 0% { opacity: 1 } 40% { opacity: 0.1 } 100% { opacity: 1 } }
 `
 
 function LotMapPane({ motionPref }) {
