@@ -20,7 +20,7 @@ Eight stations orbit a core labeled HERMES:
         BROWSER                 WEB
 ```
 
-At the center sits an eye. Its iris is the context gauge: teal while the window is quiet, amber past 70 percent, red past 90. Its pupil looks at whatever station is working and blinks when a reply lands. Stations ride a dashed orbit ring, short ticks between eye and orbit wear thicker the more a station runs, and a slow sweep line turns behind everything like a watchtower radar. Every `tool.start` sends a pulse from the eye to the station that owns the tool. Completion sends it back. Failed calls leave a red dot at the station until the reply lands, and a folded feed below the map lists the last calls with durations.
+At the center sits an eye. Its iris is the context gauge: teal while the window is quiet, amber past 70 percent, red past 90. Its pupil rests at center and glances toward whatever station is working, then drifts home; it blinks when a reply lands. Stations ride a dashed orbit ring, short ticks between eye and orbit wear thicker the more a station runs, and a slow sweep line turns behind everything like a watchtower radar. Every `tool.start` sends a pulse from the eye to the station that owns the tool. Completion sends it back. Failed calls leave a red dot at the station until the reply lands, and a folded feed below the map lists the last calls with durations.
 
 Tool names map to stations like this:
 

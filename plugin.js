@@ -181,25 +181,20 @@ function MapSvg({ b, now, motion }) {
   const ringColor = pct == null ? C.teal : pct < 0.7 ? C.teal : pct < 0.9 ? C.amber : C.red
   const modelLive = now - b.modelLiveAt < 2200
 
-  // where the eye looks: the station working now, else the last one that did
-  let focus = null
+  // the pupil rests at center and glances toward activity: a running
+  // station wins, the last completion holds for a beat, then it drifts home
+  let glance = null
+  let holdAt = 0
   for (let i = b.entries.length - 1; i >= 0; i--) {
     const e = b.entries[i]
-    if (e.status === 'run') { focus = POS[e.station]; break }
-    if (!focus) focus = POS[e.station]
+    if (e.status === 'run') { glance = POS[e.station]; break }
+    if (!glance && e.t1) { glance = POS[e.station]; holdAt = e.t1 }
   }
   let px = CX, py = CY
-  if (focus) {
-    const dx = focus.x - CX, dy = focus.y - CY
+  if (glance && (holdAt === 0 || now - holdAt < 1500)) {
+    const dx = glance.x - CX, dy = glance.y - CY
     const len = Math.hypot(dx, dy) || 1
     px = CX + (dx / len) * 7; py = CY + (dy / len) * 7
-  } else {
-    // idle: the eye wanders
-    const last = b.entries[b.entries.length - 1]
-    const idleFor = last ? now - (last.t1 || last.t0) : Infinity
-    if (idleFor > 30000 || b.entries.length === 0) {
-      px = CX + 5 * Math.cos(now / 2800); py = CY + 5 * Math.sin(now / 2800)
-    }
   }
 
   const pulses = []
