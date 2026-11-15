@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/panoptes.svg" alt="Panoptes: an eye watching eight stations on an orbit, a sweep line turning" width="830"></p>
+
 # Panoptes
 
 A pane for the [Hermes](https://hermes-agent.nousresearch.com) desktop app that shows what the agent is doing while it thinks. Tool calls, model steps, subagents and context use light up stations around a core, live, in a strip docked to the right edge of your workspace.

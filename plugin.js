@@ -193,6 +193,13 @@ function MapSvg({ b, now, motion }) {
     const dx = focus.x - CX, dy = focus.y - CY
     const len = Math.hypot(dx, dy) || 1
     px = CX + (dx / len) * 7; py = CY + (dy / len) * 7
+  } else {
+    // idle: the eye wanders
+    const last = b.entries[b.entries.length - 1]
+    const idleFor = last ? now - (last.t1 || last.t0) : Infinity
+    if (idleFor > 30000 || b.entries.length === 0) {
+      px = CX + 5 * Math.cos(now / 2800); py = CY + 5 * Math.sin(now / 2800)
+    }
   }
 
   const pulses = []
@@ -307,10 +314,12 @@ function MapSvg({ b, now, motion }) {
           jsx('circle', {
             cx: px, cy: py, r: modelLive ? 6.5 : 5,
             fill: modelLive ? C.teal : SEC,
+            style: { transition: 'cx 0.4s ease, cy 0.4s ease' },
             className: modelLive && motion ? 'lm-breathe' : ''
           }, 'pupil'),
           jsx('circle', {
-            cx: px - 2, cy: py - 2, r: 1.4, fill: 'var(--ui-surface-2, #0b0f16)', opacity: 0.9
+            cx: px - 2, cy: py - 2, r: 1.4, fill: 'var(--ui-surface-2, #0b0f16)', opacity: 0.9,
+            style: { transition: 'cx 0.4s ease, cy 0.4s ease' }
           }, 'glint'),
           jsx('text', {
             x: CX, y: CY + CORE_R + 15, fontSize: 9, textAnchor: 'middle', letterSpacing: 1,
@@ -445,9 +454,7 @@ export default {
   description: 'A live map pane at the right edge: every tool call, model step and subagent lights up its station. Hermes-native reimplementation of the lot-map concept.',
 
   register(ctx) {
-    const motionPref = atom(ctx.storage.get('motion', {
-      motion: (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'reduced' : 'full'
-    }))
+    const motionPref = atom(ctx.storage.get('motion', { motion: 'full' }))
     const saveMotion = (v) => { motionPref.set({ ...motionPref.get(), motion: v }); ctx.storage.set('motion', motionPref.get()) }
 
     // tick for pulse/glow lifetimes

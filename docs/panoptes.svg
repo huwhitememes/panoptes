@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="Panoptes: the all-seeing pane for Hermes">
+  <defs>
+    <radialGradient id="glow" cx="70%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#1b2430"/>
+    </pattern>
+    <linearGradient id="fadeL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0b0f16"/>
+      <stop offset="100%" stop-color="#0b0f16" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ground -->
+  <rect x="1" y="1" width="1278" height="638" rx="18" fill="#0b0f16" stroke="#1e2733"/>
+  <rect x="1" y="1" width="620" height="638" rx="18" fill="url(#dots)"/>
+  <rect x="1" y="1" width="620" height="638" rx="18" fill="url(#fadeL)"/>
+  <rect x="1" y="1" width="1278" height="638" rx="18" fill="url(#glow)"/>
+
+  <!-- wordmark: PAN (the-eye) PTES -->
+  <g font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-weight="700" font-size="72" letter-spacing="10">
+    <text x="72" y="266" fill="#e8edf2">PAN</text>
+    <text x="330" y="266" fill="#e8edf2">PTES</text>
+    <!-- the O is the eye -->
+    <g>
+      <circle cx="297" cy="242" r="24" fill="none" stroke="#2dd4bf" stroke-width="5"
+              stroke-dasharray="75.4 75.4" stroke-linecap="round" transform="rotate(-90 297 242)"/>
+      <circle r="8" fill="#e8edf2">
+        <animate attributeName="cx" values="297;305;305;303;299;297" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="242;242;242;248;248;242" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="1.8" fill="#0b0f16">
+        <animate attributeName="cx" values="295;303;303;301;297;295" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="240;240;240;246;246;240" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <animate attributeName="opacity" values="1;1;.1;1;1" keyTimes="0;.9;.92;.94;1" dur="8s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <text x="74" y="308" font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-size="21" fill="#9ba1ab">the all-seeing pane for Hermes</text>
+  <text x="74" y="340" font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-size="14" fill="#6b7280">tool calls, model steps, subagents - watched live from the workspace's right edge</text>
+
+  <g font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-size="12">
+    <rect x="74" y="560" width="118" height="26" rx="8" fill="none" stroke="#273140"/>
+    <text x="88" y="577" fill="#9ba1ab">desktop plugin</text>
+    <rect x="202" y="560" width="52" height="26" rx="8" fill="none" stroke="#273140"/>
+    <text x="216" y="577" fill="#9ba1ab">MIT</text>
+    <rect x="264" y="560" width="102" height="26" rx="8" fill="none" stroke="#273140"/>
+    <text x="278" y="577" fill="#9ba1ab">zero build</text>
+  </g>
+
+  <!-- master clock -->
+  <rect width="0" height="0"><animate id="clk" attributeName="x" values="0;0" dur="8s" repeatCount="indefinite"/></rect>
+
+  <!-- ============ the map ============ -->
+  <g>
+    <!-- sweep -->
+    <g>
+      <path d="M 900 320 L 900 115 A 205 205 0 0 1 1045 175 Z" fill="#2dd4bf" opacity="0.05"/>
+      <line x1="900" y1="320" x2="1105" y2="320" stroke="#2dd4bf" stroke-width="1.5" opacity="0.28"/>
+      <animateTransform attributeName="transform" type="rotate" from="0 900 320" to="360 900 320" dur="14s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- orbit -->
+    <circle cx="900" cy="320" r="205" fill="none" stroke="#2a3342" stroke-width="1.2" stroke-dasharray="3 9"/>
+
+    <!-- wear ticks -->
+    <g stroke="#2a3342" stroke-linecap="round">
+      <line x1="900" y1="281" x2="900" y2="127"/>
+      <line x1="927" y1="288" x2="1032" y2="188"/>
+      <line x1="939" y1="320" x2="1091" y2="320"/>
+      <line x1="927" y1="352" x2="1032" y2="452" stroke="#2dd4bf" stroke-width="3" opacity="0.85"/>
+      <line x1="900" y1="359" x2="900" y2="513"/>
+      <line x1="873" y1="352" x2="768" y2="452"/>
+      <line x1="861" y1="320" x2="709" y2="320" stroke="#2dd4bf" stroke-width="3" opacity="0.85"/>
+      <line x1="873" y1="288" x2="768" y2="188"/>
+    </g>
+
+    <!-- stations -->
+    <g font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-size="13" fill="#9ba1ab">
+      <circle cx="900" cy="115" r="6" fill="#9ba1ab"/>
+      <text x="900" y="94" text-anchor="middle">YOU</text>
+      <circle cx="1045" cy="175" r="6" fill="#9ba1ab"/>
+      <text x="1068" y="168">FILES</text>
+      <circle cx="1105" cy="320" r="6" fill="#2dd4bf">
+        <animate attributeName="fill" values="#2dd4bf;#2dd4bf" keyTimes="0;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <text x="1128" y="325">SHELL</text>
+      <circle cx="1045" cy="465" r="6" fill="#2dd4bf"/>
+      <text x="1068" y="482">WEB</text>
+      <circle cx="900" cy="525" r="6" fill="#9ba1ab"/>
+      <text x="900" y="553" text-anchor="middle">BROWSER</text>
+      <circle cx="755" cy="465" r="6" fill="#2dd4bf"/>
+      <text x="732" y="482" text-anchor="end">AGENTS</text>
+      <circle cx="695" cy="320" r="6" fill="#9ba1ab"/>
+      <text x="672" y="325" text-anchor="end">MEMORY</text>
+      <circle cx="755" cy="175" r="6" fill="#9ba1ab"/>
+      <text x="732" y="168" text-anchor="end">TOOLS</text>
+    </g>
+
+    <!-- firing halos -->
+    <circle cx="1105" cy="320" r="6" fill="none" stroke="#2dd4bf" stroke-width="2">
+      <animate attributeName="r" values="6;18" begin="clk.begin+0.6s" dur="1.2s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values=".6;0" begin="clk.begin+0.6s" dur="1.2s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle cx="1045" cy="465" r="6" fill="none" stroke="#2dd4bf" stroke-width="2">
+      <animate attributeName="r" values="6;18" begin="clk.begin+2.4s" dur="1.2s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values=".6;0" begin="clk.begin+2.4s" dur="1.2s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle cx="755" cy="465" r="6" fill="none" stroke="#2dd4bf" stroke-width="2">
+      <animate attributeName="r" values="6;18" begin="clk.begin+4.2s" dur="1.2s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values=".6;0" begin="clk.begin+4.2s" dur="1.2s" repeatCount="1" fill="freeze"/>
+    </circle>
+
+    <!-- the eye -->
+    <g>
+      <circle cx="900" cy="320" r="42" fill="#0e131c" stroke="#9ba1ab" stroke-width="1.5"/>
+      <circle cx="900" cy="320" r="30" fill="none" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round"
+              stroke-dasharray="84.8 103.7" transform="rotate(-90 900 320)"/>
+      <circle r="11" fill="#e8edf2">
+        <animate attributeName="cx" values="900;916;916;911;889;900" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="320;320;320;331;331;320" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#0e131c">
+        <animate attributeName="cx" values="897;913;913;908;886;897" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="317;317;317;328;328;317" keyTimes="0;.075;.3;.525;.775;1" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <animate attributeName="opacity" values="1;1;.08;1;1" keyTimes="0;.9;.92;.94;1" dur="8s" repeatCount="indefinite"/>
+    </g>
+    <!-- answer flash -->
+    <circle cx="900" cy="320" r="42" fill="none" stroke="#2dd4bf" stroke-width="1.5" opacity="0">
+      <animate attributeName="r" values="42;72" begin="clk.begin+6.2s" dur="1.2s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values=".8;0" begin="clk.begin+6.2s" dur="1.2s" repeatCount="1" fill="freeze"/>
+    </circle>
+
+    <!-- pulses out and back -->
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 900 320 L 1105 320" begin="clk.begin+0.6s" dur="0.9s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+0.6s" dur="0.9s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 1105 320 L 900 320" begin="clk.begin+1.5s" dur="0.45s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+1.5s" dur="0.45s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 900 320 L 1045 465" begin="clk.begin+2.4s" dur="0.9s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+2.4s" dur="0.9s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 1045 465 L 900 320" begin="clk.begin+3.3s" dur="0.45s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+3.3s" dur="0.45s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 900 320 L 755 465" begin="clk.begin+4.2s" dur="0.9s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+4.2s" dur="0.9s" repeatCount="1" fill="freeze"/>
+    </circle>
+    <circle r="5" fill="#2dd4bf" opacity="0">
+      <animateMotion path="M 755 465 L 900 320" begin="clk.begin+5.1s" dur="0.45s" repeatCount="1" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.85;1" begin="clk.begin+5.1s" dur="0.45s" repeatCount="1" fill="freeze"/>
+    </circle>
+
+    <!-- feed fragment -->
+    <g font-family="'SF Mono','Cascadia Code',ui-monospace,Menlo,Consolas,monospace" font-size="12" fill="#6b7280" opacity="0.75">
+      <text x="1150" y="140"><tspan fill="#2dd4bf">●</tspan> terminal date</text>
+      <text x="1150" y="162">· read_file README.md</text>
+      <text x="1150" y="184"><tspan fill="#f87171">✕</tspan> exit 7</text>
+      <text x="1150" y="206">↳ subagent spawn</text>
+    </g>
+  </g>
+</svg>
