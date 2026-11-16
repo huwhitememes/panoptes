@@ -41,17 +41,20 @@ A status-bar chip (bottom right) shows the running-call count and session totals
 
 ## Install
 
-The desktop app loads runtime plugins from a fixed directory and hot-reloads them on file change. No build step, no app rebuild.
+One command (Hermes 0.21.7 or newer):
+
+```bash
+hermes plugins install https://github.com/huwhitememes/panoptes --enable
+```
+
+Or manually: the package is a directory with `plugin.yaml` and `desktop/plugin.js`, so cloning it into the unified plugin directory is enough. No build step.
 
 ```bash
 git clone https://github.com/huwhitememes/panoptes.git
-mkdir -p ~/.hermes/desktop-plugins
-cp -r panoptes ~/.hermes/desktop-plugins/panoptes
+cp -r panoptes ~/.hermes/plugins/panoptes
 ```
 
 Restart Hermes if it is running, or toggle the pane in Settings, Plugins, Panoptes. The pane docks itself to the right edge of the workspace. A Motion toggle (full or reduced) lives in Settings, Plugins, Panoptes.
-
-If your Hermes install uses the unified plugin directory instead, drop the folder at `~/.hermes/plugins/panoptes/desktop/` with `plugin.js` inside.
 
 ## Test
 

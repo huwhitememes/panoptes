@@ -3,7 +3,7 @@
 // register() wiring, and asserts board transitions + contributions.
 import { readFileSync } from 'node:fs'
 
-const SRC = new URL('../plugin.js', import.meta.url).pathname
+const SRC = new URL('../desktop/plugin.js', import.meta.url).pathname
 const src = readFileSync(SRC, 'utf8')
 
 const dataUrl = (code) => 'data:text/javascript;base64,' + Buffer.from(code).toString('base64')

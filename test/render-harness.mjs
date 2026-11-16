@@ -6,7 +6,7 @@ if (!ROOT) {
   console.error('Set HERMES_DESKTOP_DIR to the Hermes desktop app dir (a checkout of apps/desktop with node_modules, e.g. ~/.hermes/hermes-agent/apps/desktop).')
   process.exit(1)
 }
-const SRC = new URL('../plugin.js', import.meta.url).pathname
+const SRC = new URL('../desktop/plugin.js', import.meta.url).pathname
 const { readFileSync } = await import('node:fs')
 const { pathToFileURL } = await import('node:url')
 

@@ -1,0 +1,14 @@
+name: panoptes
+label: Panoptes
+version: 0.1.0
+description: >-
+  Panoptes - a live station map pane for the Hermes desktop app. Every tool call,
+  model step and subagent lights up a station around an eye that watches whatever
+  is running: its iris doubles as the context gauge, its pupil glances toward the
+  station of each call and rests at center when idle. A status-bar chip keeps the
+  running count and session totals visible while the pane is collapsed. Single
+  file, plain ESM, no app rebuild.
+author: Hu White
+license: MIT
+requires_hermes: ">=0.21.7"
+kind: standalone
