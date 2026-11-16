@@ -13,11 +13,11 @@ Based on [lot-map](https://github.com/alexeyw/lot-map), Aleksei Volodin's map pa
 Eight stations orbit a core labeled HERMES:
 
 ```
-            YOU                FILES
-        MEMORY                      SHELL
-                · HERMES ·
-           TOOLS              AGENTS
-        BROWSER                 WEB
+                YOU
+        TOOLS            FILES
+      MEMORY    HERMES    SHELL
+        AGENTS            WEB
+               BROWSER
 ```
 
 At the center sits an eye. Its iris is the context gauge: teal while the window is quiet, amber past 70 percent, red past 90. Its pupil rests at center and glances toward whatever station is working, then drifts home; it blinks when a reply lands. Stations ride a dashed orbit ring, short ticks between eye and orbit wear thicker the more a station runs, and a slow sweep line turns behind everything like a watchtower radar. Every `tool.start` sends a pulse from the eye to the station that owns the tool. Completion sends it back. Failed calls leave a red dot at the station until the reply lands, and a folded feed below the map lists the last calls with durations.
